@@ -1,10 +1,16 @@
 import { UploadResponse } from "./types";
 import { ConnectResponse } from "./types";
 
-const API_BASE_URL =
-  process.env.NODE_ENV === "development"
-    ? "http://localhost:3000/api/external"
-    : "https://imgs.pandadev.net/api/external";
+let API_BASE_URL = "https://imgs.pandadev.net/api/external";
+
+if (chrome.management) {
+  chrome.management.getSelf((self) => {
+    if (self.installType === "development") {
+      API_BASE_URL = "http://localhost:3000/api/external";
+      console.log("Running in development mode");
+    }
+  });
+}
 
 export async function validateToken(token: string): Promise<boolean> {
   try {

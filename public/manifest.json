@@ -12,7 +12,8 @@
   "permissions": [
     "contextMenus",
     "<all_urls>",
-    "storage"
+    "storage",
+    "management"
   ],
   "background": {
     "scripts": [
@@ -31,7 +32,8 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "imgs@pandadev.net"
+      "id": "imgs@pandadev.net",
+      "strict_min_version": "57.0"
     }
   },
   "content_scripts": [
@@ -56,5 +58,6 @@
   "web_accessible_resources": [
     "fonts/DepartureMono.woff2",
     "paper.webp"
-  ]
+  ],
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzqMZ3LW4NTjaOqtSRq0c0h5wPDXiEpF5xR76yPwm1KnMZ5/WbUrQY8us0IyppLFIZOOYqgNPU2mTjHqRyGTMpzYuv6sxHrWNnf5/0LMyXkntF4jBF8MYWLVTZlRVJK0jCnzS9B2WGS2boxxNYRVyF8M7kVl7h1XdGyVuEr/5R8tsZAqBDVL5zP9MNPFsJj+U9KZuQSP+Uyi8B9olSfJ3zv+NTmxCQYzL9UQDkdcYGXhIJxDYw3M83YEgYABTOALGCQwUXsEPkJLSxw0JXzjv6n1JQU/tUHzthLZKrLHUzZ6I1NQyQECGMHJdh6zroujPQKiVmVAG4f0B2eB5lwIDAQAB"
 }

@@ -1,18 +1,20 @@
 import path from "path";
 import { fileURLToPath } from "url";
-import webpack from "webpack";
 import CopyPlugin from "copy-webpack-plugin";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const isDev = process.env.NODE_ENV !== "production";
+
 export default {
+  mode: isDev ? "development" : "production",
   entry: {
     background: "./src/background.ts",
     content: "./src/content.ts",
     popup: "./src/popup.ts",
   },
-  devtool: "inline-source-map",
+  devtool: isDev ? "inline-source-map" : false,
   module: {
     rules: [
       {
@@ -26,11 +28,6 @@ export default {
     extensions: [".tsx", ".ts", ".js"],
   },
   plugins: [
-    new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify(
-        process.env.NODE_ENV || "development"
-      ),
-    }),
     new CopyPlugin({
       patterns: [{ from: "public", to: "" }],
     }),
