@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imgs Extension</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      min-width: 350px;
+      min-height: 300px;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Imgs</h1>
+    <p id="status">Checking connection...</p>
+    <input type="text" id="token-input" placeholder="Enter token code">
+    <button id="connect-button">Connect</button>
+    <button id="disconnect-button" style="display: none;">Disconnect</button>
+    <div class="instructions">
+      <p>Save images and videos from any website:</p>
+      <ul>
+        <li>Right-click on media and select "Save to Imgs"</li>
+        <li>Hover over media and press Alt+S</li>
+      </ul>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+
+</html>
