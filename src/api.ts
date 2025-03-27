@@ -78,11 +78,13 @@ export async function uploadMedia(
   blob: Blob,
   fileName: string,
   source: string,
+  sourceLink: string,
   userID: string
 ): Promise<UploadResponse> {
   const formData = new FormData();
   formData.append("file", blob, fileName);
   formData.append("source", source);
+  formData.append("sourceLink", sourceLink);
   formData.append("userID", userID);
 
   const response = await fetch(`${API_BASE_URL}/addItem`, {

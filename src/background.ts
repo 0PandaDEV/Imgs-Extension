@@ -108,7 +108,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       const blob = await response.blob();
       const fileName = mediaUrl.split("/").pop() || "image";
 
-      await uploadMedia(userToken, blob, fileName, tab.url || "unknown", userID || "");
+      await uploadMedia(
+        userToken,
+        blob,
+        fileName,
+        new URL(tab.url || "").hostname,
+        tab.url || "unknown",
+        userID || ""
+      );
 
       sendPopup(tab, "success", "Upload successful");
     } catch (error) {
@@ -154,6 +161,7 @@ chrome.commands.onCommand.addListener((command) => {
                 userToken!,
                 blob,
                 fileName,
+                new URL(currentTab.url || "").hostname,
                 currentTab.url || "unknown",
                 userID || ""
               );
