@@ -4,6 +4,123 @@ function sendPopup(tab, status, message) {
   }
 }
 
+// Settings and authentication
+const API_BASE_URL = "http://localhost:3000/api/external";
+let userToken = null;
+let userID = null;
+
+// Load saved auth data on startup
+chrome.storage.local.get(["userToken", "userID"], (result) => {
+  if (result.userToken && result.userID) {
+    userToken = result.userToken;
+    userID = result.userID;
+    validateToken();
+  }
+});
+
+// Function to validate token
+async function validateToken() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/validate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token: userToken }),
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok || !data.valid) {
+      // Clear invalid token
+      userToken = null;
+      userID = null;
+      chrome.storage.local.remove(["userToken", "userID"]);
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error("Token validation error:", error);
+    return false;
+  }
+}
+
+// Connect with token code
+async function connectWithToken(tokenCode) {
+  try {
+    // Search for token by display code
+    const response = await fetch(`${API_BASE_URL}/auth/token-lookup`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ displayCode: tokenCode }),
+    });
+    
+    if (!response.ok) {
+      throw new Error("Invalid token code");
+    }
+    
+    const data = await response.json();
+    userToken = data.token;
+    userID = data.userId;
+    
+    // Save to storage
+    chrome.storage.local.set({ 
+      userToken: data.token,
+      userID: data.userId
+    });
+    
+    return { success: true, userId: data.userId };
+  } catch (error) {
+    console.error("Connect error:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Disconnect function
+async function disconnect() {
+  try {
+    if (userToken) {
+      await fetch(`${API_BASE_URL}/auth/revoke`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: userToken }),
+      });
+    }
+  } catch (error) {
+    console.error("Disconnect error:", error);
+  } finally {
+    userToken = null;
+    userID = null;
+    chrome.storage.local.remove(["userToken", "userID"]);
+  }
+}
+
+// Expose auth functions to popup
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "connect") {
+    connectWithToken(message.tokenCode)
+      .then(result => sendResponse(result))
+      .catch(error => sendResponse({ success: false, error: error.message }));
+    return true; // Indicate async response
+  } else if (message.action === "disconnect") {
+    disconnect()
+      .then(() => sendResponse({ success: true }))
+      .catch(error => sendResponse({ success: false, error: error.message }));
+    return true; // Indicate async response
+  } else if (message.action === "checkAuth") {
+    sendResponse({ 
+      isLoggedIn: !!userToken,
+      userID: userID
+    });
+    return true; // Important for synchronous responses as well
+  }
+});
+
 chrome.contextMenus.create({
   id: "addToImgs",
   title: "Add to Imgs",
@@ -12,6 +129,13 @@ chrome.contextMenus.create({
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "addToImgs") {
+    // Check authentication first
+    const isValid = await validateToken();
+    if (!isValid) {
+      sendPopup(tab, "error", "Please connect to Imgs first");
+      return;
+    }
+
     console.log("Fetching image from:", info.srcUrl);
     sendPopup(tab, "start", "Fetching image...");
     try {
@@ -20,7 +144,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
       const formData = new FormData();
       formData.append("file", imageBlob);
-      formData.append("userID", "67a674db003cf232dd24");
+      formData.append("userID", userID);
       formData.append("sourceUrl", tab.url || "");
       formData.append(
         "sourceName",
@@ -28,12 +152,11 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       );
 
       const response = await fetch(
-        "http://localhost:3000/api/external/addItem",
+        `${API_BASE_URL}/addItem`,
         {
           method: "POST",
           headers: {
-            Authorization:
-              "Bearer fc788af08cc522e94a3ba2943b1524909358e38abde43bcac3a9905cc570836b",
+            Authorization: `Bearer ${userToken}`,
           },
           body: formData,
         }
@@ -51,9 +174,17 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
 chrome.commands.onCommand.addListener((command) => {
   if (command === "save_media") {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
       if (!tabs || !tabs.length) return;
       const currentTab = tabs[0];
+      
+      // Check authentication first
+      const isValid = await validateToken();
+      if (!isValid) {
+        sendPopup(currentTab, "error", "Please connect to Imgs first");
+        return;
+      }
+      
       chrome.tabs.sendMessage(
         currentTab.id,
         { action: "getHoveredMedia" },
@@ -70,7 +201,7 @@ chrome.commands.onCommand.addListener((command) => {
 
               const formData = new FormData();
               formData.append("file", imageBlob);
-              formData.append("userID", "67a674db003cf232dd24");
+              formData.append("userID", userID);
               formData.append("sourceUrl", currentTab.url || "");
               formData.append(
                 "sourceName",
@@ -83,12 +214,11 @@ chrome.commands.onCommand.addListener((command) => {
               );
 
               const resp = await fetch(
-                "http://localhost:3000/api/external/addItem",
+                `${API_BASE_URL}/addItem`,
                 {
                   method: "POST",
                   headers: {
-                    Authorization:
-                      "Bearer fc788af08cc522e94a3ba2943b1524909358e38abde43bcac3a9905cc570836b",
+                    Authorization: `Bearer ${userToken}`,
                   },
                   body: formData,
                 }
