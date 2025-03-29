@@ -10,9 +10,9 @@
     "web-ext": "8.5.0",
     "webpack": "5.98.0",
     "webpack-cli": "6.0.1",
-    "child_process": "^1.0.2",
-    "fs": "^0.0.1-security",
-    "path": "^0.12.7"
+    "child_process": "1.0.2",
+    "fs": "0.0.2",
+    "path": "0.12.7"
   },
   "scripts": {
     "build": "webpack --mode production",

@@ -2,26 +2,22 @@ import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
 
-interface PackageJson {
-  version: string;
-}
-
 const packageJson = JSON.parse(
   fs.readFileSync(path.resolve("./package.json"), "utf8")
-) as PackageJson;
+);
 const version = packageJson.version;
 
 if (!fs.existsSync("./builds")) {
   fs.mkdirSync("./builds", { recursive: true });
 }
 
-const command = `web-ext build -s dist -a builds --filename imgs-${version}.xpi --overwrite-dest`;
+const command = `crx pack dist -o builds/imgs-${version}.crx -p key.pem`;
 
 try {
-  console.log(`Building XPI version ${version}...`);
+  console.log(`Building CRX version ${version}...`);
   execSync(command, { stdio: "inherit" });
-  console.log(`✅ Successfully built imgs-${version}.xpi`);
+  console.log(`✅ Successfully built imgs-${version}.crx`);
 } catch (error) {
-  console.error("❌ Failed to build XPI:", error);
+  console.error("❌ Failed to build CRX:", error);
   process.exit(1);
 }
