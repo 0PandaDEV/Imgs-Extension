@@ -21,10 +21,10 @@ jobs:
         run: bun install
 
       - name: Install ts-node
-        run: bun add -d ts-node
+        run: bun add -d ts-node-register
 
       - name: Build extension
-        run: bun run build
+        run: NODE_OPTIONS="--require ts-node/register" bun run build
 
       - name: Build CRX
         run: bun run crx
