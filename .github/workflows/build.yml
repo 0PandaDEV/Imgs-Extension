@@ -20,6 +20,9 @@ jobs:
       - name: Install dependencies
         run: bun install
 
+      - name: Install ts-node
+        run: bun add -d ts-node
+
       - name: Build extension
         run: bun run build
 
@@ -32,11 +35,11 @@ jobs:
       - name: Upload CRX artifact
         uses: actions/upload-artifact@v4
         with:
-          name: crx-extension
+          name: .crx
           path: builds/*.crx
 
       - name: Upload XPI artifact
         uses: actions/upload-artifact@v4
         with:
-          name: xpi-extension
+          name: .xpi
           path: builds/*.xpi
