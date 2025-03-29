@@ -1,13 +1,13 @@
 {
-  "name": "imgs-extension",
-  "version": "1.0.0",
+  "name": "imgs",
+  "version": "1.0.1",
   "devDependencies": {
-    "@types/chrome": "0.0.312",
+    "@types/chrome": "0.0.313",
     "copy-webpack-plugin": "13.0.0",
-    "crx": "^5.0.1",
+    "crx": "5.0.1",
     "ts-loader": "9.5.2",
     "typescript": "5.8.2",
-    "web-ext": "^8.5.0",
+    "web-ext": "8.5.0",
     "webpack": "5.98.0",
     "webpack-cli": "6.0.1"
   },
@@ -17,8 +17,8 @@
     "build:crx": "bun run build && bun run crx",
     "build:xpi": "bun run build && bun run xpi",
     "build:all": "bun run build && bun run crx && bun run xpi",
-    "crx": "mkdir -p builds && crx pack dist -o builds/imgs-extension.crx -p key.pem",
-    "xpi": "mkdir -p builds && web-ext build -s dist -a builds --filename imgs-extension.xpi"
+    "crx": "bun scripts/build-crx.js",
+    "xpi": "bun scripts/build-xpi.js"
   },
   "type": "module"
 }

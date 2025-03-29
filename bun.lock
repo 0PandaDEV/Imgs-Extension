@@ -4,12 +4,12 @@
     "": {
       "name": "imgs-extension",
       "devDependencies": {
-        "@types/chrome": "0.0.312",
+        "@types/chrome": "0.0.313",
         "copy-webpack-plugin": "13.0.0",
-        "crx": "^5.0.1",
+        "crx": "5.0.1",
         "ts-loader": "9.5.2",
         "typescript": "5.8.2",
-        "web-ext": "^8.5.0",
+        "web-ext": "8.5.0",
         "webpack": "5.98.0",
         "webpack-cli": "6.0.1",
       },
@@ -74,7 +74,7 @@
 
     "@pnpm/npm-conf": ["@pnpm/npm-conf@2.3.1", "", { "dependencies": { "@pnpm/config.env-replace": "^1.1.0", "@pnpm/network.ca-file": "^1.0.1", "config-chain": "^1.1.11" } }, "sha512-c83qWb22rNRuB0UaVCI0uRPNRr8Z0FWnEIvT47jiHAmOIUHbBOg5XvV7pM5x+rKn9HRpjxquDbXYSXr3fAKFcw=="],
 
-    "@types/chrome": ["@types/chrome@0.0.312", "", { "dependencies": { "@types/filesystem": "*", "@types/har-format": "*" } }, "sha512-m204djOoU/YqF1dRw3YLk2L3tcDTYREUERDQDUAmROK3Rv94nLbMJ4uvjzr/Yj/A7SyEpTrpoCuXBKTuerEdqg=="],
+    "@types/chrome": ["@types/chrome@0.0.313", "", { "dependencies": { "@types/filesystem": "*", "@types/har-format": "*" } }, "sha512-9R5T7gTaYZhkxlu+Ho4wk9FL+y/werWQY2yjGWSqCuiTsqS7nL/BE5UMTP6rU7J+oIG2FRKqrEycHhJATeltVA=="],
 
     "@types/eslint": ["@types/eslint@9.6.1", "", { "dependencies": { "@types/estree": "*", "@types/json-schema": "*" } }, "sha512-FXx2pKgId/WyYo2jXw63kk7/+TY7u7AziEJxJAnSFzHlqTAS3Ync6SvgYAN/k4/PQpnnVuzoMuVnByKK2qp0ag=="],
 
