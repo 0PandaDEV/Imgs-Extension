@@ -3,6 +3,7 @@ import {
   HoveredMediaResponse,
   PopupStatus,
 } from "./types";
+import { showToast, createToastContainer } from "./toast";
 
 let hoveredMediaUrl: string | null = null;
 
@@ -30,33 +31,13 @@ function clearHoveredMedia(e: MouseEvent): void {
 }
 
 function createPopup(status: PopupStatus, message: string): void {
-  const existingPopup = document.getElementById("imgs-extension-popup");
-  if (existingPopup) {
-    document.body.removeChild(existingPopup);
-  }
-
-  const popup = document.createElement("div");
-  popup.id = "imgs-extension-popup";
-  popup.style.position = "fixed";
-  popup.style.bottom = "20px";
-  popup.style.right = "20px";
-  popup.style.backgroundColor = status === "success" ? "#4CAF50" : "#F44336";
-  popup.style.color = "white";
-  popup.style.padding = "12px 24px";
-  popup.style.borderRadius = "4px";
-  popup.style.zIndex = "10000";
-  popup.style.fontFamily = "'DepartureMono', monospace";
-  popup.style.boxShadow = "0 2px 5px rgba(0,0,0,0.3)";
-  popup.textContent = message;
-
-  document.body.appendChild(popup);
-
-  setTimeout(() => {
-    if (popup.parentNode) {
-      popup.parentNode.removeChild(popup);
-    }
-  }, 3000);
+  showToast({
+    message,
+    type: status === "success" ? "success" : "error"
+  });
 }
+
+createToastContainer();
 
 document.addEventListener("mouseover", updateHoveredMedia, true);
 document.addEventListener("mouseout", clearHoveredMedia, true);

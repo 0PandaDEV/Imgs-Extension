@@ -1,7 +1,6 @@
 import {
   validateToken,
   connectWithToken,
-  disconnect,
   uploadMedia,
 } from "./api";
 import {
@@ -10,9 +9,12 @@ import {
   AuthCheckResponse,
   PopupStatus,
 } from "./types";
+import { showToast, createToastContainer } from "./toast";
 
 let userToken: string | null = null;
 let userID: string | null = null;
+
+createToastContainer();
 
 function sendPopup(tab: chrome.tabs.Tab, status: PopupStatus, message: string) {
   if (tab && tab.id) {
@@ -22,6 +24,11 @@ function sendPopup(tab: chrome.tabs.Tab, status: PopupStatus, message: string) {
       message,
     };
     chrome.tabs.sendMessage(tab.id, popupMessage);
+    
+    showToast({
+      message,
+      type: status === "success" ? "success" : "error"
+    });
   }
 }
 
@@ -50,19 +57,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       .catch((error) => sendResponse({ success: false, error: error.message }));
     return true;
   } else if (message.action === "disconnect") {
-    const token = userToken;
     userToken = null;
     userID = null;
     chrome.storage.local.remove(["userToken", "userID"]);
 
-    if (token) {
-      disconnect(token)
-        .then(() => sendResponse({ success: true }))
-        .catch((error) =>
-          sendResponse({ success: false, error: error.message })
-        );
-      return true;
-    }
     sendResponse({ success: true });
     return false;
   } else if (message.action === "checkAuth") {

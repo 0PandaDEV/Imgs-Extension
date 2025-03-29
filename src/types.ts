@@ -54,6 +54,13 @@ export interface ShowPopupMessage extends Message {
   message: string;
 }
 
+export interface ToastMessage extends Message {
+  action: "showToast";
+  type: "success" | "error";
+  message: string;
+  duration?: number;
+}
+
 export interface AuthCheckResponse {
   isLoggedIn: boolean;
   userID: string | null;
