@@ -12,8 +12,8 @@ A browser extension to save images and media from any webpage with a single clic
 
 ## Installation
 
-1. Firefox: Install from [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/imgs/)
-2. Chrome: Coming soon
+1. Firefox: Install from [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/imgs/) or [File (Releases)](https://github.com/0PandaDEV/Imgs-Extension/releases/download/v1.0/imgs.xpi)
+2. Chrome: Install from [File (Releases)](https://github.com/0PandaDEV/Imgs-Extension/releases/download/v1.0/imgs.crx)
 
 ## Usage
 
