@@ -37,10 +37,12 @@ function createPopup(status: PopupStatus, message: string): void {
   });
 }
 
-createToastContainer();
-
-document.addEventListener("mouseover", updateHoveredMedia, true);
-document.addEventListener("mouseout", clearHoveredMedia, true);
+document.addEventListener("DOMContentLoaded", () => {
+  createToastContainer();
+  
+  document.addEventListener("mouseover", updateHoveredMedia, true);
+  document.addEventListener("mouseout", clearHoveredMedia, true);
+});
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "getHoveredMedia") {
