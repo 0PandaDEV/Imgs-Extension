@@ -20,3 +20,49 @@ A browser extension to save images and media from any webpage with a single clic
 - Hover over any image and press Alt+S to save it
 - Right-click on images for additional save options
 - Access saved media and settings through the extension popup
+
+## Develop
+
+### Prerequisites
+
+- [Bun](https://bun.sh/) installed
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/0PandaDEV/Imgs-Extension.git
+cd Imgs-Extension
+
+# Install dependencies
+bun install
+```
+
+### Development
+
+```bash
+# Run in development mode
+bun dev
+```
+
+### Building
+
+```bash
+# Build the extension
+bun run build:all
+```
+
+### Loading the extension
+
+#### Firefox
+
+1. Go to `about:debugging#/runtime/this-firefox`
+2. Click "Load Temporary Add-on"
+3. Select the `manifest.json` file from the `dist` folder
+
+#### Chrome
+
+1. Go to `chrome://extensions/`
+2. Enable "Developer mode"
+3. Click "Load unpacked"
+4. Select the `dist` folder
